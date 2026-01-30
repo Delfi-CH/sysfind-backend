@@ -1,0 +1,42 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "version": "1",
+    "title": "sysfind",
+    "description": "sysfind"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "127.0.0.1"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Tag",
+      "description": "Tag"
+    }
+  ],
+  "paths": {
+    "/": {
+      "get": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {},
+    "securitySchemas": {
+      "cookie": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "LOGIN-COOKIE"
+      }
+    }
+  }
+}

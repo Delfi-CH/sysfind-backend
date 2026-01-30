@@ -1,0 +1,25 @@
+{
+  "name": "sysfind-backend",
+  "version": "0.0.1",
+  "description": "",
+  "license": "GPL-3.0",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node swagger/swagger.js && nodemon index.js"
+  },
+  "dependencies": {
+    "connect-session-sequelize": "^8.0.5",
+    "express": "^5.2.1",
+    "express-session": "^1.19.0",
+    "mariadb": "^3.4.5",
+    "sequelize": "^6.37.7",
+    "swagger-autogen": "^2.23.7",
+    "swagger-ui-express": "^5.0.1"
+  },
+  "devDependencies": {
+    "eslint": "^9.39.2",
+    "nodemon": "^3.1.11"
+  }
+}
