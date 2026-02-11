@@ -1,0 +1,152 @@
+const { sequelize, javascriptDateToDatabaseDatetime } = require("../utils/database");
+const { operatingSystemFamilies, isValidOperatingSystemFamily } = require("./operatingSystemFamily");
+const { isValidProcessorArchitecture, processorArchitecture } = require("./processorArchitecture");
+const { now } = require("sequelize/lib/utils");
+
+class OperatingSystem {
+    constructor(name, family, processorArchitecture, description, imageDownloadURL, homepage, version, isSupported) {
+        this.name = name;
+        this.family = isValidOperatingSystemFamily(family);
+        this.description = description;
+        this.processorArchitecture = isValidProcessorArchitecture(processorArchitecture);
+        this.imageDownloadURL = imageDownloadURL;
+        this.homepage = homepage;
+        this.version = version;
+        this.isSupported = isSupported;
+        this.createdAt = new Date();
+    }
+    createModel() {
+        return OperatingSystemModel.build({
+            name: this.name,
+            family: this.family,
+            description: this.description,
+            processorArchitecture: this.processorArchitecture,
+            imageDownloadURL: this.imageDownloadURL,
+            homepage: this.homepage,
+            version: this.version,
+            isSupported: this.isSupported,
+            createdAt: javascriptDateToDatabaseDatetime(this.createdAt)
+        })
+    }
+}
+
+const OperatingSystemModel = sequelize.define('Operating System', {
+    id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+        allowNull: false,
+        get() {
+            return this.getDataValue('id');
+        }
+    },
+    name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true,
+        get() {
+            return this.getDataValue('name');
+        },
+        set(value) {
+            this.setDataValue('name', value);
+        }
+    },
+    family: {
+        type: DataTypes.ENUM(...operatingSystemFamilies),
+        allowNull: false,
+        defaultValue: operatingSystemFamilies.Other,
+        unique: false,
+        get() {
+            return this.getDataValue('family');
+        },
+        set(value) {
+            this.setDataValue('family', value);
+        }
+    },
+    description: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: false,
+        get() {
+            return this.getDataValue('description');
+        },
+        set(value) {
+            this.setDataValue('description', value);
+        }
+    },
+    processorArchitecture: {
+        type: DataTypes.ENUM(...processorArchitecture),
+        allowNull: false,
+        defaultValue: processorArchitecture.Unknown,
+        unique: false,
+        get() {
+            return this.getDataValue('processorArchitecture');
+        },
+        set(value) {
+            this.setDataValue('processorArchitecture', value);
+        }
+    },
+    imageDownloadURL: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        unique: false,
+        get() {
+            return this.getDataValue('imageDownloadURL');
+        },
+        set(value) {
+            this.setDataValue('imageDownloadURL', value);
+        }
+    },
+    homepage: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        unique: false,
+        get() {
+            return this.getDataValue('homepage');
+        },
+        set(value) {
+            this.setDataValue('homepage', value);
+        }
+    },
+    version: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: false,
+        defaultValue: '1',
+        get() {
+            return this.getDataValue('version');
+        },
+        set(value) {
+            this.setDataValue('version', value);
+        }
+    },
+    isSupported: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        unique: false,
+        defaultValue: false,
+        get() {
+            return this.getDataValue('isSupported');
+        },
+        set() {
+            this.setDataValue('isSupported', !this.isSupported);
+        }
+    },
+    createdAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        unique: false,
+        defaultValue: now('mysql'),
+        get() {
+            return this.getDataValue('createdAt');
+        },
+        set(value) {
+            this.setDataValue('createdAt', value);
+        }
+    }
+}, {
+    timestamps: false
+})
+
+
+module.exports = {OperatingSystem, OperatingSystemModel}
