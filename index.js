@@ -24,12 +24,9 @@ app.use(session({
 }))
 sessionStorage.sync();
 
-
-
 app.get('/', (req, res)=>{
     res.send('Hello World')
 })
-
 
 app.listen(port, async () => {
     console.log()
