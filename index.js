@@ -6,7 +6,7 @@ const { sequelize, pingDatabase } = require('./utils/database.js');
 const { exit } = require('node:process');
 const { writeLogSucess,  writeCriticalError, writeError } = require('./utils/logger.js');
 const SequelizeStore = require("connect-session-sequelize")(session.Store);
-
+const operatingSystemController = require('./controller/operatingSystemController.js');
 
 
 const app = express();
@@ -27,6 +27,8 @@ sessionStorage.sync();
 app.get('/', (req, res)=>{
     res.send('Hello World')
 })
+
+app.use('/operatingSystem', operatingSystemController)
 
 app.listen(port, async () => {
     console.log()

@@ -1,14 +1,15 @@
 const { sequelize, javascriptDateToDatabaseDatetime } = require("../utils/database");
 const { operatingSystemFamilies, isValidOperatingSystemFamily } = require("./operatingSystemFamily");
-const { isValidProcessorArchitecture, processorArchitecture } = require("./processorArchitecture");
+const { processorArchitecture } = require("./processorArchitecture");
 const { now } = require("sequelize/lib/utils");
+const { DataTypes } = require('sequelize')
 
 class OperatingSystem {
     constructor(name, family, processorArchitecture, description, imageDownloadURL, homepage, version, isSupported) {
         this.name = name;
         this.family = isValidOperatingSystemFamily(family);
         this.description = description;
-        this.processorArchitecture = isValidProcessorArchitecture(processorArchitecture);
+        this.processorArchitecture = processorArchitecture;
         this.imageDownloadURL = imageDownloadURL;
         this.homepage = homepage;
         this.version = version;
@@ -52,7 +53,7 @@ const OperatingSystemModel = sequelize.define('Operating System', {
         }
     },
     family: {
-        type: DataTypes.ENUM(...operatingSystemFamilies),
+        type: DataTypes.ENUM(...Object.values(operatingSystemFamilies)),
         allowNull: false,
         defaultValue: operatingSystemFamilies.Other,
         unique: false,
@@ -75,7 +76,7 @@ const OperatingSystemModel = sequelize.define('Operating System', {
         }
     },
     processorArchitecture: {
-        type: DataTypes.ENUM(...processorArchitecture),
+        type: DataTypes.ENUM(...Object.values(processorArchitecture)),
         allowNull: false,
         defaultValue: processorArchitecture.Unknown,
         unique: false,
@@ -140,9 +141,6 @@ const OperatingSystemModel = sequelize.define('Operating System', {
         get() {
             return this.getDataValue('createdAt');
         },
-        set(value) {
-            this.setDataValue('createdAt', value);
-        }
     }
 }, {
     timestamps: false

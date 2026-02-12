@@ -12,10 +12,10 @@ const processorArchitecture = Object.freeze({
     ARM32: 'Aarch32',
     ARM64: 'Aarch64',
     ARMv5: 'ARMv5',
-    ARMv6: 'ARMv5',
-    ARMv7: 'ARMv5',
-    ARMv8: 'ARMv5',
-    ARMv9: 'ARMv5',
+    ARMv6: 'ARMv6',
+    ARMv7: 'ARMv7',
+    ARMv8: 'ARMv8',
+    ARMv9: 'ARMv9',
     ARMAppleSilicon: 'Apple Silicon',
     RiscV32: 'RiscV 32',
     RiscV64: 'RiscV 64',
@@ -33,8 +33,4 @@ const processorArchitecture = Object.freeze({
     Unknown: 'Unknown'
 })
 
-function isValidProcessorArchitecture(val) {
-    return Object.values(processorArchitecture).includes(val) ? val : processorArchitecture.Unknown ;
-}
-
-module.exports = {processorArchitecture, isValidProcessorArchitecture}
+module.exports = {processorArchitecture}

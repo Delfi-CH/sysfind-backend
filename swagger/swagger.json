@@ -27,6 +27,16 @@
           }
         }
       }
+    },
+    "/operatingSystem/": {
+      "get": {
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
     }
   },
   "components": {
