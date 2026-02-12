@@ -1,6 +1,6 @@
 const { sequelize, javascriptDateToDatabaseDatetime } = require("../utils/database");
 const { operatingSystemFamilies, isValidOperatingSystemFamily } = require("./operatingSystemFamily");
-const { processorArchitecture } = require("./processorArchitecture");
+const { processorArchitecture, processorArchitectureModel } = require("./processorArchitecture");
 const { now } = require("sequelize/lib/utils");
 const { DataTypes } = require('sequelize')
 
@@ -75,18 +75,6 @@ const OperatingSystemModel = sequelize.define('Operating System', {
             this.setDataValue('description', value);
         }
     },
-    processorArchitecture: {
-        type: DataTypes.ENUM(...Object.values(processorArchitecture)),
-        allowNull: false,
-        defaultValue: processorArchitecture.Unknown,
-        unique: false,
-        get() {
-            return this.getDataValue('processorArchitecture');
-        },
-        set(value) {
-            this.setDataValue('processorArchitecture', value);
-        }
-    },
     imageDownloadURL: {
         type: DataTypes.STRING,
         allowNull: true,
@@ -145,6 +133,14 @@ const OperatingSystemModel = sequelize.define('Operating System', {
 }, {
     timestamps: false
 })
+
+OperatingSystemModel.belongsToMany(processorArchitectureModel, {
+  through: "OperatingSystemArchitectures"
+});
+
+processorArchitectureModel.belongsToMany(OperatingSystemModel, {
+  through: "OperatingSystemArchitectures"
+});
 
 
 module.exports = {OperatingSystem, OperatingSystemModel}

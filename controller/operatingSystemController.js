@@ -1,5 +1,5 @@
 const express = require('express')
-const {operatingSystem, OperatingSystemModel, OperatingSystem} = require('../model/operatingSystem.js')
+const {OperatingSystemModel, processorArchitectureModel} = require('../model/index.js')
 const { writeLogSucess, writeError, writeLogTemporary } = require('../utils/logger.js');
 const { DatabaseError } = require('../utils/error.js');
 const { sequelize } = require('../utils/database.js');
@@ -10,8 +10,17 @@ router.use(express.json());
 router.get('/', async (req,res)=> {
     writeLogTemporary('Querying all operating systems from database...');
     try {
-        const DatabaseOperatingSystems = await OperatingSystemModel.findAll();
-        const OperatingSystems = DatabaseOperatingSystems.map(os => (os.dataValues));
+        const DatabaseOperatingSystems = await OperatingSystemModel.findAll({
+            include: [
+            {
+                model: processorArchitectureModel,
+                as: "architectures", 
+                through: { attributes: [] }
+            }
+            ]
+        });
+        let OperatingSystems = DatabaseOperatingSystems.map(os => (os.dataValues));
+        OperatingSystems = {...OperatingSystems, }
         writeLogSucess("Query was sucessfull");
         res.json(OperatingSystems);
     } catch (e) {
@@ -25,7 +34,15 @@ router.get('/:id', async (req,res)=> {
     const id = req.params.id
     writeLogTemporary('Querying a operating system from database...');
     try {
-        const DatabaseOperatingSystem = await OperatingSystemModel.findByPk(id);
+        const DatabaseOperatingSystem = await OperatingSystemModel.findByPk(id,{
+        include: [
+        {
+            model: processorArchitectureModel,
+            as: "architectures",
+            through: { attributes: [] }
+        }
+        ]
+        });
         const OperatingSystem = DatabaseOperatingSystem.dataValues;
         writeLogSucess("Query was sucessfull");
         res.json(OperatingSystem);
@@ -38,19 +55,15 @@ router.get('/:id', async (req,res)=> {
 
 router.post('/', async (req, res) =>{
     writeLogTemporary("Writing new OS to database...");
-    const operatingSystem = new OperatingSystem(
-        req.body.name, 
-        req.body.family,
-        req.body.processorArchitecture,     
-        req.body.description,
-        req.body.imageDownloadURL,
-        req.body.homepage,
-        req.body.version,
-        req.body.isSupported
-    );
-    const tmp = operatingSystem.createModel()
+    const operatingSystem = await OperatingSystemModel.create(req.body);
     try {
-        await tmp.save();
+        const architectures = await processorArchitectureModel.findAll({
+        where: {
+            name: req.body.processorArchitecture
+        }
+        });
+        await operatingSystem.addArchitectures(architectures);
+        await operatingSystem.save();   
         writeLogSucess("Wrote new OS to database");
         res.sendStatus(201);
         return
@@ -74,5 +87,20 @@ curl -X POST http://localhost:3000/operatingSystem \
     "isSupported": true
 }'
 */
-//todo: fix
+
+router.delete('/:id', async (req,res)=> {
+    const id = req.params.id
+    writeLogTemporary('Querying a operating system from database...');
+    try {
+        const DatabaseOperatingSystem = await OperatingSystemModel.findByPk(id);
+        DatabaseOperatingSystem.delete()
+        writeLogSucess("Deletion was sucessfull");
+        res.sendStatus(204)
+    } catch (e) {
+        const err = new DatabaseError(e);
+        writeError("Could not query the database: "+err.getMessage());
+        res.status(err.getCode()).send(err.getMessage())
+    }
+})
+
 module.exports = router;

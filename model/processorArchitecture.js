@@ -1,3 +1,7 @@
+const { sequelize, javascriptDateToDatabaseDatetime } = require("../utils/database");
+const { DataTypes } = require('sequelize')
+
+
 const processorArchitecture = Object.freeze({
     i386: 'i386',
     i486: 'i486',
@@ -33,4 +37,30 @@ const processorArchitecture = Object.freeze({
     Unknown: 'Unknown'
 })
 
-module.exports = {processorArchitecture}
+const processorArchitectureModel = sequelize.define("Processor Architecture", {
+    id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+        allowNull: false,
+        get() {
+            return this.getDataValue('id');
+        }
+    },
+    name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true,
+        get() {
+            return this.getDataValue('name');
+        },
+        set(value) {
+            this.setDataValue('name', value);
+        }
+    }
+},  {
+    timestamps: false
+});
+
+
+module.exports = {processorArchitecture, processorArchitectureModel}
