@@ -55,6 +55,10 @@ router.get('/:id', async (req,res)=> {
 })
 
 router.post('/', async (req, res) =>{
+    if (!req.session.email) {
+        res.sendStatus(401);
+        return
+    }
     writeLogTemporary("Writing new OS to database...");
     const operatingSystem = await OperatingSystemModel.create(req.body);
     try {
@@ -90,6 +94,10 @@ curl -X POST http://localhost:3000/operatingSystem \
 */
 
 router.delete('/:id', async (req,res)=> {
+    if (!req.session.email) {
+        res.sendStatus(401);
+        return
+    }
     const id = req.params.id
     writeLogTemporary('Querying a operating system from database...');
     try {

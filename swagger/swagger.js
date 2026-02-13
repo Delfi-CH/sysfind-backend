@@ -14,8 +14,8 @@ const doc = {
   ],
   tags: [
     {
-      name: 'Tag',
-      description: 'Tag'
+      name: 'Authentication',
+      description: 'Authentication related endpoints'
     },
 
   ],
