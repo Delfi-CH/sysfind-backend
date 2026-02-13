@@ -8,6 +8,7 @@ const { writeLogSucess,  writeCriticalError, writeError } = require('./utils/log
 const SequelizeStore = require("connect-session-sequelize")(session.Store);
 const operatingSystemController = require('./controller/operatingSystemController.js');
 const { credentialsOk } = require('./utils/authentication.js');
+const cors  = require('cors')
 
 
 const app = express();
@@ -29,6 +30,7 @@ app.get('/', (req, res)=>{
     res.send('Hello World')
 })
 
+app.use(cors());
 app.use('/operatingSystem', operatingSystemController)
 
 app.post('/login', async (request, response, next) => {

@@ -44,7 +44,7 @@ const OperatingSystemModel = sequelize.define('Operating System', {
     name: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true,
+        unique: false,
         get() {
             return this.getDataValue('name');
         },
