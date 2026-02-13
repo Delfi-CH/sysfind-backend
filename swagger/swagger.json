@@ -50,28 +50,7 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "name": {
-                    "example": "any"
-                  },
-                  "family": {
-                    "example": "any"
-                  },
                   "processorArchitecture": {
-                    "example": "any"
-                  },
-                  "description": {
-                    "example": "any"
-                  },
-                  "imageDownloadURL": {
-                    "example": "any"
-                  },
-                  "homepage": {
-                    "example": "any"
-                  },
-                  "version": {
-                    "example": "any"
-                  },
-                  "isSupported": {
                     "example": "any"
                   }
                 }
@@ -87,6 +66,44 @@
         "parameters": [
           {
             "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/operatingSystem/family/{family}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "family",
             "in": "path",
             "required": true,
             "schema": {

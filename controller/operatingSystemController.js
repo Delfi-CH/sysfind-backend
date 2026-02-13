@@ -3,6 +3,7 @@ const {OperatingSystemModel, processorArchitectureModel} = require('../model/ind
 const { writeLogSucess, writeError, writeLogTemporary } = require('../utils/logger.js');
 const { DatabaseError } = require('../utils/error.js');
 const { sequelize } = require('../utils/database.js');
+const { isValidOperatingSystemFamily } = require('../model/operatingSystemFamily.js');
 
 const router = express.Router();
 router.use(express.json());
@@ -96,6 +97,61 @@ router.delete('/:id', async (req,res)=> {
         DatabaseOperatingSystem.delete()
         writeLogSucess("Deletion was sucessfull");
         res.sendStatus(204)
+    } catch (e) {
+        const err = new DatabaseError(e);
+        writeError("Could not query the database: "+err.getMessage());
+        res.status(err.getCode()).send(err.getMessage())
+    }
+})
+
+router.get('/family/:family', async (req,res)=> {
+    const family = req.params.family;
+    writeLogTemporary('Querying all operating systems from database...');
+    try {
+        const DatabaseOperatingSystems = await OperatingSystemModel.findAll({
+            where: {
+                family: isValidOperatingSystemFamily(family)
+            },
+            include: [
+            {
+                model: processorArchitectureModel,
+                as: "architectures", 
+                through: { attributes: [] }
+            }
+            ]
+        });
+        let OperatingSystems = DatabaseOperatingSystems.map(os => (os.dataValues));
+        OperatingSystems = {...OperatingSystems, }
+        writeLogSucess("Query was sucessfull");
+        res.json(OperatingSystems);
+    } catch (e) {
+        const err = new DatabaseError(e);
+        writeError("Could not query the database: "+err.getMessage());
+        res.status(err.getCode()).send(err.getMessage())
+    }
+})
+
+router.get('/architecture/:architecture', async (req,res)=> {
+    const architecture = req.params.architecture;
+    writeLogTemporary('Querying all operating systems from database...');
+    try {
+        const DatabaseOperatingSystems = await OperatingSystemModel.findAll({
+            
+            include: [
+            {
+                model: processorArchitectureModel,
+                as: "architectures", 
+                through: { attributes: [] },
+                where: {
+                    name: architecture
+                }
+            }
+            ],
+        });
+        let OperatingSystems = DatabaseOperatingSystems.map(os => (os.dataValues));
+        OperatingSystems = {...OperatingSystems, }
+        writeLogSucess("Query was sucessfull");
+        res.json(OperatingSystems);
     } catch (e) {
         const err = new DatabaseError(e);
         writeError("Could not query the database: "+err.getMessage());
