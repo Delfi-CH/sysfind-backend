@@ -128,7 +128,7 @@ router.get('/family/:family', async (req,res)=> {
             }
             ]
         });
-        let OperatingSystems = DatabaseOperatingSystems.map(os => (os.dataValues));
+        let OperatingSystems = DatabaseOperatingSystems.map(os => os.get({ plain: true }));
         OperatingSystems = {...OperatingSystems, }
         writeLogSucess("Query was sucessfull");
         res.json(OperatingSystems);
@@ -156,7 +156,7 @@ router.get('/architecture/:architecture', async (req,res)=> {
             }
             ],
         });
-        let OperatingSystems = DatabaseOperatingSystems.map(os => (os.dataValues));
+        let OperatingSystems = DatabaseOperatingSystems.map(os => os.get({ plain: true }));
         OperatingSystems = {...OperatingSystems, }
         writeLogSucess("Query was sucessfull");
         res.json(OperatingSystems);
