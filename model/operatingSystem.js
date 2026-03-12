@@ -5,12 +5,13 @@ const { now } = require("sequelize/lib/utils");
 const { DataTypes } = require('sequelize')
 
 class OperatingSystem {
-    constructor(name, family, processorArchitecture, description, imageDownloadURL, homepage, version, isSupported) {
+    constructor(name, family, processorArchitecture, description, imageDownloadURL, homepage, version, isSupported, hash) {
         this.name = name;
         this.family = isValidOperatingSystemFamily(family);
         this.description = description;
         this.processorArchitecture = processorArchitecture;
         this.imageDownloadURL = imageDownloadURL;
+        this.hash = hash;
         this.homepage = homepage;
         this.version = version;
         this.isSupported = isSupported;
@@ -26,7 +27,8 @@ class OperatingSystem {
             homepage: this.homepage,
             version: this.version,
             isSupported: this.isSupported,
-            createdAt: javascriptDateToDatabaseDatetime(this.createdAt)
+            createdAt: javascriptDateToDatabaseDatetime(this.createdAt),
+            hash: this.hash
         })
     }
 }
@@ -84,6 +86,17 @@ const OperatingSystemModel = sequelize.define('Operating System', {
         },
         set(value) {
             this.setDataValue('imageDownloadURL', value);
+        }
+    },
+    hash: {
+        type: DataTypes.STRING,
+        allowNull: true,
+        unique: false,
+        get() {
+            return this.getDataValue('hash');
+        },
+        set(value) {
+            this.setDataValue('hash', value);
         }
     },
     homepage: {

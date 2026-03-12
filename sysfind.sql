@@ -29,6 +29,7 @@ CREATE TABLE `Operating Systems` (
   `family` enum('PC-DOS','Windows 9x','Windows NT','Classic MacOS','MacOSX','UNIX','UNIX-Like','BSD','Linux','Other') NOT NULL,
   `description` varchar(100) NOT NULL,
   `imageDownloadURL` varchar(100) DEFAULT NULL,
+  `hash` varchar(100) DEFAULT NULL,
   `homepage` varchar(100) DEFAULT NULL,
   `version` varchar(100) NOT NULL,
   `isSupported` tinyint(1) NOT NULL,
