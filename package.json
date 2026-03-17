@@ -2,14 +2,15 @@
   "name": "sysfind-backend",
   "version": "0.0.1",
   "description": "",
-  "license": "GPL-3.0",
-  "author": "",
+  "license": "AGPL-3.0",
+  "author": "Delfi-CH",
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
     "dev": "node swagger/swagger.js && nodemon index.js"
   },
   "dependencies": {
+    "@delfi-ch/ini.js": "^0.1.0",
     "connect-session-sequelize": "^8.0.5",
     "cors": "^2.8.6",
     "date-format": "^4.0.14",
