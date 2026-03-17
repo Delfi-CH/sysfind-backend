@@ -88,6 +88,16 @@
         }
       }
     },
+    "/dump": {
+      "get": {
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
     "/operatingSystem/": {
       "get": {
         "description": "",

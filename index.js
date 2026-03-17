@@ -10,12 +10,13 @@ const swaggerDocument = require('./swagger/swagger.json');
 const { sequelize, pingDatabase } = require('./utils/database.js');
 const SequelizeStore = require("connect-session-sequelize")(session.Store);
 const operatingSystemController = require('./controller/operatingSystemController.js');
+const dumpDataToIni = require("./utils/dumpDatabase.js")
 
 const { exit } = require('node:process');
 
 const { credentialsOk } = require('./utils/authentication.js');
 
-const {readConfig} = require("./utils/config.js")
+const {readConfig} = require("./utils/config.js");
 
 let port = 3000;
 
@@ -111,6 +112,15 @@ app.delete('/logout', (request, response, next) => {
 /* 
     curl -c tmp/cookies -X DELETE http://localhost:3000/logout
 */
+
+app.get('/dump', async (request, response) => {
+    try {
+        await dumpDataToIni()
+        response.sendStatus(201)
+    } catch (e) {
+        response.sendStatus(500)
+    }
+})
 
 app.listen(port, async () => {
     console.log()
