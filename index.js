@@ -114,6 +114,10 @@ app.delete('/logout', (request, response, next) => {
 */
 
 app.get('/dump', async (request, response) => {
+    if (!config.application.allowdump) {
+        response.status(501).send("Database dumping not enabled in config.")
+        return
+    }
     try {
         await dumpDataToIni()
         response.sendStatus(201)
