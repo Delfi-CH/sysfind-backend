@@ -21,7 +21,6 @@ const {readConfig} = require("./utils/config.js");
 let port = 3000;
 
 let config = readConfig("config.ini")
-console.log(config)
 port = config.application.port ? config.application.port : 3000;
 
 const app = express();
