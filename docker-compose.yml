@@ -6,6 +6,8 @@ services:
       MYSQL_USER: node
       MYSQL_PASSWORD: node
       MYSQL_ROOT_PASSWORD: 1234
+    volumes:
+       - ./sysfind.sql:/docker-entrypoint-initdb.d/sysfind.sql:ro
 
   sysfind:
     build: .
