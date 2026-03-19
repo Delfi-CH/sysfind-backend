@@ -1,0 +1,21 @@
+services:
+  sysfind-db:
+    image: mariadb:12
+    environment:
+      MYSQL_DATABASE: sysfind
+      MYSQL_USER: node
+      MYSQL_PASSWORD: node
+      MYSQL_ROOT_PASSWORD: 1234
+
+  sysfind:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      DB_HOST: sysfind-db
+      DB_PORT: 3306
+      DB_USER: node
+      DB_PASSWORD: node
+      DB_NAME: sysfind
+    depends_on:
+      - sysfind-db

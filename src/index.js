@@ -138,7 +138,7 @@ app.listen(port, async () => {
             tries++;
 
             await pingDatabase();
-            console.log("DB connected");
+            writeLogSucess("DB connected");
             return;
         } catch (e) {
             writeCriticalError(`Attempt ${tries} failed: ${e.message}`);
