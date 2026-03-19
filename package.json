@@ -3,11 +3,12 @@
   "version": "0.0.1",
   "description": "",
   "license": "AGPL-3.0",
-  "author": "Delfi-CH",
+  "author": "Delfi-CH <delfi@delfi.dev>",
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
-    "dev": "node swagger/swagger.js && nodemon index.js"
+    "start": "node src/swagger/swagger.js && node src/index.js",
+    "dev": "node src/swagger/swagger.js && nodemon src/index.js"
   },
   "dependencies": {
     "@delfi-ch/ini.js": "^0.1.0",

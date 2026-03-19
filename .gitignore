@@ -1,3 +1,5 @@
 node_modules/*  
 .idea/*
-dump/*
+src/dump/*
+
+app/*

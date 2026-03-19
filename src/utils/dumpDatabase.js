@@ -2,8 +2,7 @@ const { writeIni } = require("@delfi-ch/ini.js/fs")
 const { objectToIniString, iniStringToObject } = require("@delfi-ch/ini.js")
 const fs = require("fs/promises")
 const {OperatingSystemModel, processorArchitectureModel} = require('../model/index.js')
-const { writeLogSucess, writeError, writeLogTemporary } = require('../utils/logger.js');
-const { DatabaseError } = require('../utils/error.js');
+const { writeLogSucess, writeError, writeLogTemporary } = require('./logger.js');
 
 async function dumpDataToIni() {
     writeLogTemporary('Querying all operating systems from database...');
@@ -46,8 +45,7 @@ async function dumpDataToIni() {
         })
         return;
     } catch (e) {
-        const err = new DatabaseError(e);
-        writeError("Could not query the database: "+err.getMessage());
+        writeError("Could not save to database: "+e.getMessage());
     }
 }
 

@@ -1,7 +1,6 @@
 const express = require('express')
 const {OperatingSystemModel, processorArchitectureModel} = require('../model/index.js')
 const { writeLogSucess, writeError, writeLogTemporary } = require('../utils/logger.js');
-const { DatabaseError } = require('../utils/error.js');
 const { sequelize } = require('../utils/database.js');
 const { isValidOperatingSystemFamily } = require('../model/operatingSystemFamily.js');
 
@@ -25,9 +24,8 @@ router.get('/', async (req,res)=> {
         writeLogSucess("Query was sucessfull");
         res.json(OperatingSystems);
     } catch (e) {
-        const err = new DatabaseError(e);
-        writeError("Could not query the database: "+err.getMessage());
-        res.status(err.getCode()).send(err.getMessage())
+        writeError("Could not query the database: "+e.getMessage());
+        res.status(500).send(e.getMessage())
     }
 })
 
@@ -48,9 +46,8 @@ router.get('/:id', async (req,res)=> {
         writeLogSucess("Query was sucessfull");
         res.json(OperatingSystem);
     } catch (e) {
-        const err = new DatabaseError(e);
-        writeError("Could not query the database: "+err.getMessage());
-        res.status(err.getCode()).send(err.getMessage())
+        writeError("Could not query the database: "+e.getMessage());
+        res.status(500).send(e.getMessage())
     }
 })
 
@@ -73,9 +70,8 @@ router.post('/', async (req, res) =>{
         res.sendStatus(201);
         return
     } catch (e) {
-        const err = new DatabaseError(e);
-        writeError("Could not save to database: "+err.getMessage());
-        res.status(err.getCode()).send(err.getMessage());
+        writeError("Could not save to database: "+e.getMessage());
+        res.status(500).send(e.getMessage());
     }
 })
 /*
@@ -106,9 +102,8 @@ router.delete('/:id', async (req,res)=> {
         writeLogSucess("Deletion was sucessfull");
         res.sendStatus(204)
     } catch (e) {
-        const err = new DatabaseError(e);
-        writeError("Could not query the database: "+err.getMessage());
-        res.status(err.getCode()).send(err.getMessage())
+        writeError("Could not save to database: "+e.getMessage());
+        res.status(500).send(e.getMessage());
     }
 })
 
@@ -133,9 +128,8 @@ router.get('/family/:family', async (req,res)=> {
         writeLogSucess("Query was sucessfull");
         res.json(OperatingSystems);
     } catch (e) {
-        const err = new DatabaseError(e);
-        writeError("Could not query the database: "+err.getMessage());
-        res.status(err.getCode()).send(err.getMessage())
+        writeError("Could not save to database: "+e.getMessage());
+        res.status(500).send(e.getMessage());
     }
 })
 
@@ -161,9 +155,8 @@ router.get('/architecture/:architecture', async (req,res)=> {
         writeLogSucess("Query was sucessfull");
         res.json(OperatingSystems);
     } catch (e) {
-        const err = new DatabaseError(e);
-        writeError("Could not query the database: "+err.getMessage());
-        res.status(err.getCode()).send(err.getMessage())
+        writeError("Could not save to database: "+e.getMessage());
+        res.status(500).send(e.getMessage());
     }
 })
 

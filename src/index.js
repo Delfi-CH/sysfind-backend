@@ -21,11 +21,12 @@ const {readConfig} = require("./utils/config.js");
 let port = 3000;
 
 let config = readConfig("config.ini")
+console.log(config)
 port = config.application.port ? config.application.port : 3000;
 
 const app = express();
 app.use(express.json());
-app.use('/swagger-ui', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use('/api/sysfind/swagger-ui', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 const sessionStorage = new SequelizeStore({
     db: sequelize,
@@ -37,14 +38,14 @@ app.use(session({
 }))
 sessionStorage.sync();
 
-app.get('/', (req, res)=>{
+app.get('/api/sysfind/', (req, res)=>{
     res.send('Hello World')
 })
 
 app.use(cors());
-app.use('/operatingSystem', operatingSystemController)
+app.use('/api/sysfind/operatingSystem', operatingSystemController)
 
-app.post('/login', async (request, response, next) => {
+app.post('/api/sysfind/login', async (request, response, next) => {
     // #swagger.tags = ['Authentication']
     /* #swagger.requestBody = {
             required: true,
@@ -87,7 +88,7 @@ app.post('/login', async (request, response, next) => {
     curl -c tmp/cookies -X POST -H "Content-Type: application/json" -d '{"email":"user@example.com","password":"1234"}' http://localhost:3000/login
 */
 
-app.get('/verify', (request, response)=> {
+app.get('/api/sysfind/verify', (request, response)=> {
     // #swagger.tags = ['Authentication']
     // #swagger.security = [{ "cookie": [] }]
     request.session.email ? response.sendStatus(200) : response.sendStatus(401);
@@ -97,7 +98,7 @@ app.get('/verify', (request, response)=> {
     curl -b tmp/cookies http://localhost:3000/verify
 */
 
-app.delete('/logout', (request, response, next) => {
+app.delete('/api/sysfind/logout', (request, response, next) => {
     // #swagger.tags = ['Authentication']
     request.session.email = null;
     request.session.save((err) => {
@@ -113,7 +114,7 @@ app.delete('/logout', (request, response, next) => {
     curl -c tmp/cookies -X DELETE http://localhost:3000/logout
 */
 
-app.get('/dump', async (request, response) => {
+app.get('/api/sysfind/dump', async (request, response) => {
     if (!config.application.allowdump) {
         response.status(501).send("Database dumping not enabled in config.")
         return
@@ -127,12 +128,27 @@ app.get('/dump', async (request, response) => {
 })
 
 app.listen(port, async () => {
-    console.log()
     writeLogSucess('App listening on Port ' + port);
-    try {
-        await pingDatabase()
-    } catch(e) {
-        writeCriticalError("CRITICAL: FAILED TO CONNECT TO DATABASE! REASON: "+ e.getMessage())
-        exit(1)
-    };
-})
+
+    const maxRetries = 3;
+    let tries = 0;
+
+    while (tries < maxRetries) {
+        try {
+            tries++;
+
+            await pingDatabase();
+            console.log("DB connected");
+            return;
+        } catch (e) {
+            writeCriticalError(`Attempt ${tries} failed: ${e.message}`);
+
+            if (tries >= maxRetries) {
+                writeCriticalError("CRITICAL: Could not connect to DB. Aborting.");
+                process.exit(1);
+            }
+
+            await new Promise(res => setTimeout(res, 2000));
+        }
+    }
+});
