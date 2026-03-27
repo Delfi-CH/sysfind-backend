@@ -141,7 +141,7 @@ app.get('/api/sysfind/dump', async (request, response) => {
     }
 })
 
-app.listen(port, async () => {
+app.listen(port, '0.0.0.0', async () => {
     writeLogSucess('App listening on Port ' + port);
 
     const maxRetries = 3;
