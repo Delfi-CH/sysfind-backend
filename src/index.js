@@ -41,7 +41,22 @@ app.get('/api/sysfind/', (req, res)=>{
     res.send('Hello World')
 })
 
-app.use(cors());
+const allowedOrigins = [
+  'http://localhost:1420',
+  'tauri://localhost'
+];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    } else {
+      return callback(new Error('Not allowed by CORS'));
+    }
+  }
+}));
 app.use('/api/sysfind/operatingSystem', operatingSystemController)
 
 app.post('/api/sysfind/login', async (request, response, next) => {
