@@ -25,22 +25,6 @@ port = config.application.port ? config.application.port : 3000;
 
 const app = express();
 app.use(express.json());
-app.use('/api/sysfind/swagger-ui', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-
-const sessionStorage = new SequelizeStore({
-    db: sequelize,
-});
-app.use(session({
-    secret: 'keyboard cat',
-    store: sessionStorage,
-    resave: false
-}))
-sessionStorage.sync();
-
-app.get('/api/sysfind/', (req, res)=>{
-    res.send('Hello World')
-})
-
 const allowedOrigins = [
   'http://localhost:1420',
   'tauri://localhost'
@@ -57,6 +41,22 @@ app.use(cors({
     }
   }
 }));
+app.use('/api/sysfind/swagger-ui', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
+const sessionStorage = new SequelizeStore({
+    db: sequelize,
+});
+app.use(session({
+    secret: 'keyboard cat',
+    store: sessionStorage,
+    resave: false
+}))
+sessionStorage.sync();
+
+app.get('/api/sysfind/', (req, res)=>{
+    res.send('Hello World')
+})
+
 app.use('/api/sysfind/operatingSystem', operatingSystemController)
 
 app.post('/api/sysfind/login', async (request, response, next) => {
