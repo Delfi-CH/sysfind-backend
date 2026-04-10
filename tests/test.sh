@@ -33,6 +33,7 @@ run_a_test () {
         passcounter=$(($passcounter + 1))
     else
         echo -e "Test $1: \e[31mFail\e[0m"
+        echo -e "Test $1: Expected $4, got $result"
         failcounter=$(($failcounter + 1))
     fi
 }
@@ -50,18 +51,22 @@ run_a_test_regex () {
         passcounter=$(($passcounter + 1))
     else
         echo -e "Test $1: \e[31mFail\e[0m"
+        echo -e "Test $1: Expected pattern $4, got $result"
         failcounter=$(($failcounter + 1))
     fi
 }
 
-run_a_test 1 "Is GET / working?" "$(curl "http://localhost:3000/" --no-progress-meter)" "hello, world"
+run_a_test 1 "Is GET / working?" "$(curl "http://localhost:3000/api/sysfind" --no-progress-meter)" "Hello World"
+
+run_a_test 2 "Is Authentication working via GET /verify" "$(curl -b ${tempdir}/cookies http://localhost:3000/api/sysfind/verify --no-progress-meter)" "Unauthorized"
+
 
 
 echo -e
 
 echo -e "Total Tests: $(($passcounter + $failcounter))"
-echo -e "\e[32mPass: ${passcounter}\e[0m/$(($passcounter + $failcounter))"
-echo -e "\e[31mFail: ${failcounter}\e[0m/$(($passcounter + $failcounter))"
+echo -e "\e[32mPass: \e[0m${passcounter}/$(($passcounter + $failcounter))"
+echo -e "\e[31mFail: \e[0m${failcounter}/$(($passcounter + $failcounter))"
 
 echo -e
 
